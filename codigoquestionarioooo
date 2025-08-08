@@ -1486,11 +1486,21 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
     }
 
     const getResultado = (bloco) => {
-        const score = scores[bloco] || 0
-        const faixa = resultados[bloco].find(
-            (r) => score >= r.faixa[0] && score <= r.faixa[1]
-        )
-        return faixa ? { ...faixa, score } : null
+        const blocoChavePorPergunta = {
+            "Maturidade em Automação & Inteligência Artificial": "Automação & Eficiência Operacional",
+        }
+
+        const scoreOriginal = scores[bloco] || 0
+        const chaveResultado = blocoChavePorPergunta[bloco] || bloco
+        const faixas = resultados[chaveResultado]
+        if (!faixas || faixas.length === 0) return null
+
+        const minFaixa = faixas[0].faixa[0]
+        const maxFaixa = faixas[faixas.length - 1].faixa[1]
+        const score = Math.max(minFaixa, Math.min(scoreOriginal, maxFaixa))
+
+        const faixa = faixas.find((r) => score >= r.faixa[0] && score <= r.faixa[1])
+        return faixa ? { ...faixa, score: scoreOriginal } : null
     }
 
     if (fase === "inicio") {
@@ -1644,6 +1654,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
                 </h2>
                 {Object.keys(scores).map((bloco) => {
                     const res = getResultado(bloco)
+                    if (!res) return null
                     return (
                         <div key={bloco} style={{ marginBottom: 32 }}>
                             <h3 style={{ fontSize: 20, fontWeight: 600 }}>

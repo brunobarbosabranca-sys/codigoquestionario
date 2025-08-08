@@ -1,0 +1,1674 @@
+import { useState } from "react"
+
+export function DiagnosticoQuiz() {
+    const [fase, setFase] = useState("inicio")
+    const [step, setStep] = useState(0)
+    const [formData, setFormData] = useState({
+        firstName: "",
+        phone: "",
+        email: "",
+    })
+    const [scores, setScores] = useState({})
+
+    const perguntas = [
+        {
+            bloco: "Estratégia Comercial",
+            titulo: "Estratégia Comercial",
+            questao: {
+                texto: "Com que critério vocês escolhem onde focar primeiro seus esforços de vendas?",
+                opcoes: [
+                    {
+                        texto: "Atendemos quem aparece sem diferença.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Usamos só setor e porte como filtro, sem hierarquia real.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Identificamos 2-3 segmentos prioritários, mas só revisamos anualmente.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Selecionamos segmentos pelo valor potencial e ajustamos prioridades sempre que aparecem novos dados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Estratégia Comercial",
+            titulo: "Estratégia Comercial",
+            questao: {
+                texto: "Com que critério vocês escolhem onde focar primeiro seus esforços de vendas?",
+                opcoes: [
+                    {
+                        texto: "Atendemos quem aparece sem diferença.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Usamos só setor e porte como filtro, sem hierarquia real.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Identificamos 2-3 segmentos prioritários, mas só revisamos anualmente.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Selecionamos segmentos pelo valor potencial e ajustamos prioridades sempre que aparecem novos dados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Estratégia Comercial",
+            titulo: "Estratégia Comercial",
+            questao: {
+                texto: "Quando foi a última vez que você testou e ajustou sua principal proposta de valor?",
+                opcoes: [
+                    {
+                        texto: "Nunca tivemos uma proposta documentada; falamos o que julgamos na hora.",
+                        valor: 0,
+                    },
+                    {
+                        texto: 'Criamos um discurso genérico ("preço justo e bom atendimento") e raramente mudamos.',
+                        valor: 15,
+                    },
+                    {
+                        texto: "Testamos em algumas vendas-chave e alteramos quando houve feedback negativo.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Revemos e refinamos continuamente com base em pesquisas e resultados de mercado.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Estratégia Comercial",
+            titulo: "Estratégia Comercial",
+            questao: {
+                texto: "Com que frequência vocês revisitam o plano de ação da estratégia comercial?",
+                opcoes: [
+                    {
+                        texto: "Só mudamos algo em caso de crise ou meta muito fora do alvo.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Revisamos anualmente, mas sem definir ações concretas de melhoria.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Ajustamos trimestralmente conforme resultados e previsões.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Avaliamos mensalmente ou sempre que há grandes variações, definindo ações imediatas.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Perfil do Cliente Ideal & Persona",
+            titulo: "Perfil do Cliente Ideal & Persona - Bloco 1",
+            questao: {
+                texto: "Como vocês definem quem é o cliente ideal da empresa?",
+                opcoes: [
+                    {
+                        texto: "Nunca definimos claramente quem é o cliente ideal.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos um perfil básico, mas é vago ou desatualizado.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Criamos um perfil com base em dados e validamos ocasionalmente.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Temos perfis claros e atualizados com base em dados e feedback do time.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        // Bloco 2
+        {
+            bloco: "Perfil do Cliente Ideal & Persona",
+            titulo: "Perfil do Cliente Ideal & Persona - Bloco 2",
+            questao: {
+                texto: "Como vocês utilizam personas nas suas estratégias comerciais?",
+                opcoes: [
+                    { texto: "Não utilizamos personas.", valor: 0 },
+                    {
+                        texto: "Temos personas genéricas criadas pelo marketing.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Utilizamos personas específicas em algumas campanhas.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Criamos e aplicamos personas validadas em todas as ações comerciais.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        // Bloco 3
+        {
+            bloco: "Perfil do Cliente Ideal & Persona",
+            titulo: "Perfil do Cliente Ideal & Persona - Bloco 3",
+            questao: {
+                texto: "Com que frequência vocês atualizam os dados sobre seus clientes ideais?",
+                opcoes: [
+                    { texto: "Nunca atualizamos.", valor: 0 },
+                    { texto: "Atualizamos anualmente.", valor: 15 },
+                    {
+                        texto: "Revisamos semestralmente com base em feedback.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Revisamos constantemente com base em dados e resultados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Geração de Demanda",
+            titulo: "Geração de Demanda - Bloco 1",
+            questao: {
+                texto: "Como sua empresa costuma gerar novos leads atualmente?",
+                opcoes: [
+                    {
+                        texto: "Dependemos exclusivamente de indicações ou visitantes espontâneos.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Realizamos campanhas básicas de e-mail ou redes sociais, sem muita constância.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos ações recorrentes (inbound/outbound), mas ajustamos estratégias só trimestralmente.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Usamos canais diversos, com ajustes constantes e foco em dados e automações.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Geração de Demanda",
+            titulo: "Geração de Demanda - Bloco 2",
+            questao: {
+                texto: "Com que frequência você revisa e ajusta os canais e mensagens das campanhas de geração de leads?",
+                opcoes: [
+                    {
+                        texto: "Nunca ou quase nunca. Fazemos o que sempre fizemos.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "De forma esporádica, sem seguir calendário ou testes específicos.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Revisamos mensalmente com base em métricas básicas e feedback.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Executamos ajustes semanais com base em testes A/B e performance de canal.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Geração de Demanda",
+            titulo: "Geração de Demanda - Bloco 3",
+            questao: {
+                texto: "Você utiliza alguma ferramenta de automação ou CRM para campanhas e nutrição de leads?",
+                opcoes: [
+                    {
+                        texto: "Não utilizamos nenhuma ferramenta estruturada.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos uma ferramenta, mas usamos de forma muito básica ou manual.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Usamos ferramentas com alguns fluxos automatizados.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Usamos ferramentas completas com automações personalizadas e integradas ao funil.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Gestão de Funil & Processo Comercial",
+            titulo: "Gestão de Funil & Processo Comercial - Bloco 1",
+            questao: {
+                texto: "Seu processo comercial está estruturado em etapas claras de funil?",
+                opcoes: [
+                    {
+                        texto: "Não temos etapas definidas e tratamos cada caso de forma diferente.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos um processo simples, mas sem critérios claros entre etapas.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos etapas e critérios definidos e usamos um CRM para registrar as oportunidades.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Nosso funil é bem estruturado, com critérios, SLAs e uso consistente de ferramentas.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Gestão de Funil & Processo Comercial",
+            titulo: "Gestão de Funil & Processo Comercial - Bloco 2",
+            questao: {
+                texto: "Como sua equipe acompanha e revisa as oportunidades em andamento?",
+                opcoes: [
+                    {
+                        texto: "Cada vendedor cuida do seu, sem revisão estruturada.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Fazemos algumas reuniões pontuais, mas sem um processo regular.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Fazemos reuniões semanais e revisamos status com base no CRM.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Temos revisões frequentes com dashboards em tempo real e ajustes constantes.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Gestão de Funil & Processo Comercial",
+            titulo: "Gestão de Funil & Processo Comercial - Bloco 3",
+            questao: {
+                texto: "Você utiliza algum tipo de alerta ou automação para leads estagnados ou oportunidades quentes?",
+                opcoes: [
+                    {
+                        texto: "Não, esse acompanhamento é feito de forma manual ou quando lembramos.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos algumas marcações no CRM, mas sem automações ou alertas claros.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Utilizamos alertas manuais e alguns disparos automáticos.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Temos automações avançadas com lead scoring e alertas inteligentes.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Capacitação da Equipe",
+            titulo: "Capacitação da Equipe - Bloco 1",
+            questao: {
+                texto: "Seu time comercial recebe treinamentos estruturados sobre o processo de vendas?",
+                opcoes: [
+                    { texto: "Não realizamos treinamentos formais.", valor: 0 },
+                    {
+                        texto: "Fazemos treinamentos apenas quando há contratação de novos vendedores.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos treinamentos trimestrais focados em etapas do processo e pitch.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Treinamos continuamente, com reciclagens e baseados em dados de performance.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Capacitação da Equipe",
+            titulo: "Capacitação da Equipe - Bloco 2",
+            questao: {
+                texto: "Como é feita a atualização de conhecimento sobre produtos ou mercado dentro do time?",
+                opcoes: [
+                    {
+                        texto: "Não temos um processo definido para isso.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Compartilhamos novidades informalmente, por grupos ou e-mail.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos reuniões mensais com atualizações técnicas e de mercado.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Mantemos uma base viva de conhecimento com atualizações frequentes e obrigatórias.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Capacitação da Equipe",
+            titulo: "Capacitação da Equipe - Bloco 3",
+            questao: {
+                texto: "Você avalia a evolução de habilidades comerciais dos profissionais ao longo do tempo?",
+                opcoes: [
+                    {
+                        texto: "Não avaliamos o desenvolvimento individual dos vendedores.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Avaliamos apenas informalmente, com base em metas atingidas.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos avaliações semestrais baseadas em habilidades e resultados.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Realizamos avaliações contínuas com planos de desenvolvimento individual.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Sucesso do Cliente & Retenção",
+            titulo: "Sucesso do Cliente & Retenção - Bloco 1",
+            questao: {
+                texto: "Qual é o grau de estrutura do seu processo de pós-venda e acompanhamento de clientes?",
+                opcoes: [
+                    {
+                        texto: "Não temos um processo estruturado, só atendemos se o cliente procurar.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Fazemos follow-ups pontuais com os principais clientes.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos um processo básico com check-ins regulares e análise de satisfação.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Temos um time dedicado com rotinas de sucesso e planos personalizados por cliente.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Sucesso do Cliente & Retenção",
+            titulo: "Sucesso do Cliente & Retenção - Bloco 2",
+            questao: {
+                texto: "Você mede o sucesso do cliente com indicadores claros (ex.: NPS, churn, LTV)?",
+                opcoes: [
+                    {
+                        texto: "Não temos métricas de sucesso definidas.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Medimos apenas NPS ou satisfação pontualmente.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Acompanhamos 2 ou mais métricas com revisões periódicas.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Avaliamos múltiplos indicadores em tempo real e usamos para tomar decisões.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Sucesso do Cliente & Retenção",
+            titulo: "Sucesso do Cliente & Retenção - Bloco 3",
+            questao: {
+                texto: "Você possui ações específicas para aumentar a retenção e o upsell de clientes?",
+                opcoes: [
+                    {
+                        texto: "Não temos nenhuma ação estruturada para isso.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Fazemos tentativas pontuais de retenção ou upsell quando percebemos risco.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos estratégias básicas com planos e ofertas por perfil de cliente.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Executamos campanhas estruturadas e automatizadas com base em comportamento do cliente.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Ferramentas & Integração de Dados",
+            titulo: "Ferramentas & Integração de Dados - Bloco 1",
+            questao: {
+                texto: "Você utiliza ferramentas para centralizar informações de marketing, vendas e atendimento?",
+                opcoes: [
+                    {
+                        texto: "Não usamos nenhuma ferramenta integrada.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Usamos algumas ferramentas, mas sem integração entre elas.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos integração parcial entre algumas plataformas.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Usamos uma stack bem integrada com dados fluindo entre áreas.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Ferramentas & Integração de Dados",
+            titulo: "Ferramentas & Integração de Dados - Bloco 2",
+            questao: {
+                texto: "Os dados de clientes são facilmente acessíveis e usados pelas áreas?",
+                opcoes: [
+                    {
+                        texto: "Não. Os dados ficam espalhados e são difíceis de acessar.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos alguns relatórios, mas com acesso restrito ou atraso.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos dashboards atualizados regularmente para acompanhamento geral.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Todas as áreas acessam dados atualizados em tempo real com autonomia.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Ferramentas & Integração de Dados",
+            titulo: "Ferramentas & Integração de Dados - Bloco 3",
+            questao: {
+                texto: "Como os dados influenciam as decisões comerciais da sua empresa?",
+                opcoes: [
+                    {
+                        texto: "Quase não usamos dados para tomar decisões.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Usamos alguns dados em apresentações e planejamentos.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "As decisões são baseadas em relatórios regulares de performance.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Tomamos decisões com base em análises preditivas e dashboards automatizados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Métricas & Relatórios de Receita",
+            titulo: "Métricas & Relatórios de Receita - Bloco 1",
+            questao: {
+                texto: "Sua empresa acompanha métricas financeiras (CAC, LTV, ROI) de forma consistente?",
+                opcoes: [
+                    {
+                        texto: "Não acompanhamos métricas financeiras regularmente.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Acompanhamos poucas métricas de forma esporádica.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos relatórios mensais com os principais indicadores.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Monitoramos todos os indicadores em tempo real com metas claras.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Métricas & Relatórios de Receita",
+            titulo: "Métricas & Relatórios de Receita - Bloco 2",
+            questao: {
+                texto: "Você consegue prever com precisão a receita para os próximos meses?",
+                opcoes: [
+                    {
+                        texto: "Não. A receita varia muito e não temos previsibilidade.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos alguma noção baseada em histórico, mas sem confiança.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Fazemos previsões com base em funil e contratos em andamento.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Temos previsibilidade baseada em modelos estatísticos e dados atualizados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Métricas & Relatórios de Receita",
+            titulo: "Métricas & Relatórios de Receita - Bloco 3",
+            questao: {
+                texto: "Com que frequência são compartilhados os relatórios de performance com o time?",
+                opcoes: [
+                    {
+                        texto: "Raramente ou nunca são compartilhados.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Compartilhamos apenas em reuniões trimestrais ou de fechamento.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Compartilhamos mensalmente com os principais indicadores.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Disponibilizamos relatórios semanais ou dashboards com acesso livre.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Maturidade em Automação & Inteligência Artificial",
+            titulo: "Maturidade em Automação & IA - Bloco 1",
+            questao: {
+                texto: "Você utiliza automações em alguma etapa do processo comercial?",
+                opcoes: [
+                    {
+                        texto: "Não utilizamos nenhuma automação no processo.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Usamos automações básicas, como respostas automáticas ou follow-ups.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos automações em múltiplas etapas do funil.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Utilizamos automações com personalização baseada em comportamento e dados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Maturidade em Automação & Inteligência Artificial",
+            titulo: "Maturidade em Automação & IA - Bloco 2",
+            questao: {
+                texto: "Sua empresa já utiliza inteligência artificial para melhorar vendas ou marketing?",
+                opcoes: [
+                    { texto: "Não utilizamos IA em nenhuma etapa.", valor: 0 },
+                    {
+                        texto: "Já testamos algumas ferramentas com IA, mas sem uso recorrente.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Usamos IA em tarefas como lead scoring ou recomendação de conteúdo.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "A IA está integrada ao processo para personalização, predição e tomada de decisão.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Maturidade em Automação & Inteligência Artificial",
+            titulo: "Maturidade em Automação & IA - Bloco 3",
+            questao: {
+                texto: "Com que frequência você testa e implementa novas tecnologias no processo comercial?",
+                opcoes: [
+                    {
+                        texto: "Raramente ou apenas quando algo quebra.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Testamos ferramentas esporadicamente sem uma rotina definida.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos uma rotina semestral para revisar e testar novas soluções.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Realizamos testes contínuos e temos um plano de inovação estruturado.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Alinhamento entre Marketing, Vendas e Atendimento",
+            titulo: "Integração Marketing, Vendas e Atendimento - Bloco 1",
+            questao: {
+                texto: "Como é o nível de alinhamento entre os times de marketing, vendas e atendimento?",
+                opcoes: [
+                    {
+                        texto: "Cada área trabalha isoladamente com pouca comunicação.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Há trocas informais, mas sem metas ou processos conjuntos.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Temos reuniões e algumas metas compartilhadas.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Trabalhamos de forma integrada, com metas, processos e ferramentas unificadas.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Alinhamento entre Marketing, Vendas e Atendimento",
+            titulo: "Integração Marketing, Vendas e Atendimento - Bloco 1",
+            questao: {
+                texto: "Como as áreas trocam informações sobre os leads e clientes?",
+                opcoes: [
+                    {
+                        texto: "Não há troca sistematizada de informações entre áreas.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Enviamos planilhas ou e-mails de tempos em tempos.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Usamos o CRM para registro de informações e acompanhamento conjunto.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Compartilhamos dados em tempo real com reuniões e dashboards compartilhados.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+        {
+            bloco: "Alinhamento entre Marketing, Vendas e Atendimento",
+            titulo: "Alinhamento entre Marketing, Vendas e Atendimento - Bloco 1",
+            questao: {
+                texto: "Existe um planejamento unificado entre as áreas com metas conjuntas?",
+                opcoes: [
+                    {
+                        texto: "Não, cada área define metas e estratégias separadamente.",
+                        valor: 0,
+                    },
+                    {
+                        texto: "Temos algumas metas em comum, mas sem um plano integrado.",
+                        valor: 15,
+                    },
+                    {
+                        texto: "Criamos planos conjuntos para campanhas e crescimento de receita.",
+                        valor: 30,
+                    },
+                    {
+                        texto: "Fazemos planejamento colaborativo com metas compartilhadas e acompanhamento em tempo real.",
+                        valor: 45,
+                    },
+                ],
+            },
+        },
+    ]
+
+    const resultados = {
+        "Estratégia Comercial": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Sua estratégia de vendas é essencialmente reativa: vocês atendem quem aparece, sem definir claramente quem devem buscar ou como vender para eles.
+
+Próximos passos:
+• Definir 2-3 segmentos de cliente prioritários (por tamanho, setor ou potencial de receita).
+• Documentar sua proposta de valor principal e treinar o time para usá-la.
+• Agendar revisões trimestrais da estratégia para validar resultados.
+
+O que você pode esperar:
+• Até 20% mais eficiência no uso de recursos (tempo e orçamento).
+• Redução de até 15% no ciclo de vendas ao focar nos clientes certos.
+
+Se não mudar:
+Você continuará dispersando esforços em leads de baixo potencial, consumindo tempo e perdendo oportunidades de negócios de maior valor.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você já identificou segmentos e tem uma proposta de valor, mas a priorização é pouco dinâmica e a revisão da estratégia ocorre apenas uma vez ao ano.
+
+Próximos passos:
+• Centralizar toda a informação de clientes e leads num CRM unificado.
+• Criar um calendário de revisão semestral da estratégia comercial.
+• Introduzir métricas simples de performance (taxa de conversão por segmento).
+
+O que você pode esperar:
+• Aumento de até 25% na previsibilidade de receita.
+• Menos retrabalho ao alinhar foco de campanha e oferta.
+
+Se não mudar:
+Sua operação continuará com desvios entre o planejamento e a execução, dificultando ajustes rápidos quando o mercado mudar.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Sua estratégia de vendas é bem documentada e revisada trimestralmente, mas ainda ocorre reação com certo atraso às variações de mercado.
+
+Próximos passos:
+• Automatizar relatórios semanais de performance por segmento.
+• Estabelecer OKRs comerciais ligando metas estratégicas a táticas de campo.
+• Incluir feedback do time de vendas nas revisões de proposta de valor.
+
+O que você pode esperar:
+• Ganho de até 30% na velocidade de adaptação a novas oportunidades.
+• Melhoria de até 20% na taxa de fechamento, com foco mais preciso nos clientes ideais.
+
+Se não mudar:
+Você corre o risco de perder participação de mercado para concorrentes mais ágeis e de não aproveitar picos de demanda.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Sua estratégia comercial é ativa, baseada em dados de mercado e em previsões, com revisões mensais e forte alinhamento entre todas as frentes de vendas.
+
+Próximos passos:
+• Implantar testes A/B contínuos na proposta de valor e pacotes de oferta.
+• Aplicar análise preditiva para identificar segmentos de alto potencial antes dos concorrentes.
+• Estabelecer um comitê de inovação comercial para revisar tendências e ajustar a estratégia.
+
+O que você pode esperar:
+• Até 40% de ganho em eficiência de funil e redução de 25% no custo de aquisição.
+• Maior agilidade no lançamento de novas campanhas e adaptação de preços.
+
+Se não mudar:
+Sua operação pode estagnar no limiar da alta performance, ficando vulnerável a mudanças rápidas de mercado e à entrada de novos competidores.`,
+            },
+        ],
+        "Perfil do Cliente Ideal & Persona": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: "Sua definição de cliente ideal é inexistente ou superficial, o que compromete a efetividade das suas ações comerciais.\n\nPróximos passos:\n• Definir critérios objetivos para identificar o cliente ideal.\n• Criar personas baseadas em clientes reais.\n• Compartilhar isso com os times de marketing e vendas.",
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: "Você já tem um perfil básico e algumas personas, mas a aplicação ainda é limitada e pouco atualizada.\n\nPróximos passos:\n• Validar personas com dados reais.\n• Atualizar perfis com regularidade.\n• Aplicar as personas nas estratégias comerciais e de conteúdo.",
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: "Sua definição de cliente ideal é clara e aplicada com consistência, mas há oportunidades de aprimorar com insights mais dinâmicos.\n\nPróximos passos:\n• Integrar dados de CRM e feedbacks contínuos.\n• Refinar personas com base em conversões e rejeições.\n• Criar testes de abordagem por persona.",
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: "Seu time utiliza com maestria perfis de cliente ideal e personas validadas, com atualizações frequentes baseadas em dados reais.\n\nPróximos passos:\n• Usar IA e análise preditiva para identificar variações no perfil ideal.\n• Personalizar abordagens em escala por persona.\n• Compartilhar boas práticas com todo o time.",
+            },
+        ],
+        "Geração de Demanda": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Você depende quase que exclusivamente de indicações e visitantes espontâneos. Não há esforços estruturados para atrair leads.
+
+Próximos passos:
+• Defina 1-2 canais principais (ex.: redes sociais ou parcerias) e crie um cronograma de postagens.
+• Elabore um conteúdo introdutório simples (post ou e-book) para capturar e-mails.
+• Acompanhe a quantidade de leads gerados por ação para avaliar eficácia.
+
+O que você pode esperar:
+• Até 10% de aumento em novos contatos mensais.
+• Visibilidade inicial sobre quais canais têm mais potencial.
+
+Se não mudar:
+Sua base de leads ficará estagnada, e você continuará reagindo a oportunidades em vez de criá-las.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você já roda campanhas básicas de e-mail ou anúncios, mas sem segmentação refinada e com medição limitada.
+
+Próximos passos:
+• Segmentar suas listas por interesse ou perfil e testar 2 variações de mensagem.
+• Estabelecer um calendário mensal de conteúdo (blog, posts ou webinars).
+• Começar a monitorar métricas essenciais: CPL (custo por lead) e taxa de conversão.
+
+O que você pode esperar:
+• Redução de até 20% no CPL ao focar em públicos mais alinhados.
+• Aumento de até 15% na taxa de conversão de leads.
+
+Se não mudar:
+Você continuará gastando orçamento em campanhas pouco eficientes e sem escalar resultados.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Você integra inbound e outbound de forma coordenada, com fluxo de nutrição e campanhas regulares, mas ajustes ainda são semestrais ou trimestrais.
+
+Próximos passos:
+• Automatizar fluxos de nutrição com gatilhos baseados em comportamento (downloads, visitas).
+• Revisar e otimizar criativos e ofertas a cada mês, usando testes A/B.
+• Implantar relatórios semanais de performance para ajustes rápidos.
+
+O que você pode esperar:
+• Até 30% de aumento na geração de leads qualificados.
+• Melhoria de 25% na velocidade de avanço de leads pelo funil.
+
+Se não mudar:
+Sua geração de demanda pode perder ritmo frente a concorrentes que otimizam campanhas continuamente.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Sua estratégia de demanda é plenamente automatizada e guiada por dados em tempo real. Você identifica e ativa novos canais e segmentos proativamente.
+
+Próximos passos:
+• Implementar inteligência artificial para recomendar conteúdos e ofertas personalizadas.
+• Orquestrar campanhas omnichannel com coordenação dinâmica de orçamentos.
+• Acompanhar insights preditivos para antecipar picos de demanda e ajustar o mix de canais.
+
+O que você pode esperar:
+• Até 40% de aumento em leads qualificados.
+• Redução de 30% no tempo médio de qualificação de lead.
+
+Se não mudar:
+Você ficará atrás de players que usam IA para gerar demanda de forma eficiente e em novas frentes.`,
+            },
+        ],
+        "Gestão de Funil & Processo Comercial": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Não existe um funil estruturado nem um processo definido: cada oportunidade é tratada de forma diferente e muitas ficam “esquecidas” em planilhas ou permissões do vendedor.
+
+Próximos passos:
+• Desenhar as etapas do funil (ex.: Lead → Proposta → Negociação → Fechamento).
+• Definir critérios simples de passagem entre elas (por exemplo, “aceitou proposta” para avançar).
+• Registrar todas as oportunidades num único lugar (um CRM gratuito ou planilha padronizada).
+
+O que você pode esperar:
+• Até 20% de aumento na visibilidade do pipeline.
+• Redução de 15% em leads perdidos por falta de acompanhamento.
+
+Se não mudar:
+Oportunidades serão perdidas sem você perceber e sua previsão de receita ficará imprecisa.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você já tem etapas definidas e um CRM, mas a atualização é manual e sem prazos claros. Muitas oportunidades atrasam ou «voltam» de fase sem justificativa.
+
+Próximos passos:
+• Estabelecer SLAs internos para cada etapa (ex.: 48h para contato pós-proposta).
+• Criar alertas manuais ou automáticos (e-mail/reminder) para leads estagnados.
+• Realizar reuniões semanais curtas para revisar pipeline e alinhar ações.
+
+O que você pode esperar:
+• Até 25% de melhoria na velocidade de avanço dos leads.
+• Menos gargalos identificados antes de virar problema.
+
+Se não mudar:
+Seu pipeline continuará engessado, dificultando intervenções e comprometendo o ritmo de vendas.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Funil e processo estão documentados, com SLAs e reuniões regulares. Ainda assim, as análises ocorrem em relatórios semanais ou mensais, atrasando ajustes ágeis.
+
+Próximos passos:
+• Implantar relatórios diários ou dashboards em tempo real com indicadores de funil.
+• Usar funções de automação do CRM para mover oportunidades conforme critérios.
+• Coletar feedback dos vendedores para ajustar critérios e etapas periodicamente.
+
+O que você pode esperar:
+• Até 30% de redução no ciclo de vendas.
+• Aumento de 20% na taxa de conversão de oportunidades qualificadas.
+
+Se não mudar:
+Oportunidades fora do script podem escapar do processo e você perderá velocidade competitiva.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Você conta com funil totalmente integrado e automatizado: alertas inteligentes, movimentação automática de oportunidades e análises em tempo real.
+
+Próximos passos:
+• Adotar recursos de inteligência (lead scoring e predição de fechamento).
+• Aplicar automações que priorizam leads em risco e destacam oportunidades quentes.
+• Realizar testes contínuos no processo (A/B de etapas, scripts e cadências).
+
+O que você pode esperar:
+• Até 40% de ganho em eficiência do funil.
+• Maior previsibilidade e crescimento acelerado de receita.
+
+Se não mudar:
+Você ficará atrás de empresas que usam tecnologia para antecipar e acelerar vendas, perdendo competitividade.`,
+            },
+        ],
+        "Capacitação da Equipe": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Sua equipe comercial não passa por capacitações estruturadas, o que limita sua evolução.
+
+Próximos passos:
+• Estabelecer treinamentos introdutórios sobre o processo de vendas.
+• Criar um plano trimestral de capacitação.
+• Avaliar habilidades mínimas por função.
+
+O que você pode esperar:
+• Aumento da produtividade individual.
+• Redução de erros no processo de vendas.
+
+Se não mudar:
+Você corre o risco de ter alta rotatividade e baixa performance geral.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Sua equipe passa por treinamentos pontuais, mas ainda sem um plano contínuo de evolução.
+
+Próximos passos:
+• Padronizar conteúdo técnico e comportamental.
+• Criar rituais mensais de atualização.
+• Usar dados de performance para adaptar o conteúdo.
+
+O que você pode esperar:
+• Mais consistência entre vendedores.
+• Redução de curva de aprendizado para novos membros.
+
+Se não mudar:
+Sua equipe continuará com gaps importantes que afetam os resultados.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Você já treina e acompanha a evolução dos profissionais, mas ainda sem planos individuais.
+
+Próximos passos:
+• Implantar planos de desenvolvimento personalizados.
+• Reforçar temas com maior impacto nas métricas.
+• Monitorar evolução técnica ao longo do tempo.
+
+O que você pode esperar:
+• Até 25% de melhoria na eficiência individual.
+• Maior retenção de talentos.
+
+Se não mudar:
+Você limitará o avanço de bons profissionais e o crescimento do time.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Sua capacitação é contínua, baseada em dados e conectada aos objetivos estratégicos.
+
+Próximos passos:
+• Mapear competências futuras e preparar a equipe para elas.
+• Criar trilhas de carreira comerciais.
+• Integrar ferramentas de aprendizagem contínua com dados de CRM.
+
+O que você pode esperar:
+• Time de alta performance pronto para escalar.
+• Vantagem competitiva com profissionais preparados.
+
+Se não mudar:
+Você pode estagnar no desenvolvimento das pessoas e perder talentos para concorrentes.`,
+            },
+        ],
+
+        "Sucesso do Cliente & Retenção": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Seu pós-venda é reativo e sem métricas de sucesso, o que afeta a fidelização.
+
+Próximos passos:
+• Criar um roteiro básico de acompanhamento pós-venda.
+• Aplicar pesquisas simples de satisfação.
+• Começar a mapear indicadores de churn.
+
+O que você pode esperar:
+• Menor perda de clientes no início da jornada.
+• Melhoria no relacionamento com a base atual.
+
+Se não mudar:
+Você continuará perdendo clientes sem entender o porquê.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você acompanha alguns clientes e mede NPS, mas sem ações específicas de retenção.
+
+Próximos passos:
+• Estabelecer planos de ação para os diferentes perfis.
+• Criar campanhas de engajamento recorrente.
+• Monitorar LTV por segmento.
+
+O que você pode esperar:
+• Redução de até 20% no churn.
+• Melhoria na receita vinda da base atual.
+
+Se não mudar:
+Você pode perder oportunidades de expansão com clientes existentes.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Você possui estratégias e KPIs, mas há pouca automação e antecipação.
+
+Próximos passos:
+• Automatizar sinais de risco (ex.: queda de uso).
+• Realizar reuniões QBRs com clientes estratégicos.
+• Estabelecer OKRs para retenção e upsell.
+
+O que você pode esperar:
+• Aumento do LTV em até 30%.
+• Maior engajamento com a base.
+
+Se não mudar:
+Você perderá escala e oportunidades de crescimento orgânico.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Sua estratégia de sucesso do cliente é proativa e altamente analítica.
+
+Próximos passos:
+• Aplicar inteligência preditiva para identificar riscos.
+• Integrar time de sucesso ao planejamento estratégico.
+• Criar programa de defensores da marca.
+
+O que você pode esperar:
+• Redução drástica de churn.
+• Crescimento exponencial via indicações e upsell.
+
+Se não mudar:
+Sua maturidade pode regredir diante de mudanças na base ou aumento da concorrência.`,
+            },
+        ],
+
+        "Ferramentas & Integração de Dados": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Sua empresa sofre com dados descentralizados e ferramentas desconectadas.
+
+Próximos passos:
+• Mapear ferramentas utilizadas por área.
+• Unificar contatos e histórico em uma base.
+• Começar com integrações simples via planilhas ou Zapier.
+
+O que você pode esperar:
+• Redução de retrabalho.
+• Melhoria na comunicação entre áreas.
+
+Se não mudar:
+Você continuará perdendo oportunidades por falta de informação integrada.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você tem algumas integrações, mas ainda enfrenta gargalos e perda de dados.
+
+Próximos passos:
+• Centralizar dados em um CRM.
+• Treinar o time para uso padronizado.
+• Criar alertas e relatórios básicos.
+
+O que você pode esperar:
+• Melhoria de até 25% na eficiência operacional.
+• Menor dependência de planilhas e controles manuais.
+
+Se não mudar:
+Sua equipe seguirá sem visibilidade em tempo real para decisões rápidas.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Você opera com boa integração entre áreas, mas com análises manuais e sem insights avançados.
+
+Próximos passos:
+• Implantar dashboards dinâmicos por função.
+• Automatizar envio de relatórios periódicos.
+• Integrar leads, dados financeiros e atendimento em uma visão única.
+
+O que você pode esperar:
+• Até 30% mais agilidade para tomada de decisão.
+• Mais clareza sobre o que está funcionando ou não.
+
+Se não mudar:
+Sua empresa pode perder competitividade frente a players com decisões baseadas em dados.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Sua operação é altamente conectada, com dados atualizados fluindo entre todas as áreas.
+
+Próximos passos:
+• Implantar IA para geração automática de insights.
+• Treinar lideranças para gestão baseada em dados.
+• Estabelecer governança de dados clara.
+
+O que você pode esperar:
+• Aumento da eficiência de toda a operação.
+• Ações mais rápidas e assertivas.
+
+Se não mudar:
+Sua liderança pode perder protagonismo diante de um cenário data-driven.`,
+            },
+        ],
+        "Métricas & Relatórios de Receita": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Você acompanha apenas o faturamento bruto no fim do mês, sem segmentação por canal, produto ou equipe. Relatórios são manuais e atrasados.
+
+Próximos passos:
+Liste os KPIs básicos (faturamento, número de vendas) e documente-os.
+Crie uma planilha simples com colunas por canal ou produto.
+Estabeleça uma rotina mensal de atualização desses dados.
+
+O que você pode esperar:
+ • Visibilidade de onde vem sua receita, ainda que de forma básica.
+ • Identificação inicial de canais ou produtos de melhor desempenho.
+
+Se não mudar: 
+Você seguirá sem entender quais áreas merecem mais investimento, arriscando orçamento em frentes pouco rentáveis.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você monitora faturamento, número de vendas e talvez churn mensalmente, mas os relatórios são estáticos (PDF/planilha) e com atraso de dias ou semanas.
+
+Próximos passos:
+Configure dashboards básicos em ferramentas gratuitas (Google Data Studio, por exemplo).
+Segmente indicadores por canal, produto e campanha.
+Agende reuniões mensais para apresentação dos relatórios à equipe.
+
+O que você pode esperar:
+ • Redução no tempo de decisão, ao ter acesso rápido aos números.
+ • Melhoria de até 15% no alinhamento entre times sobre metas.
+
+Se não mudar:
+Decisões continuarão baseadas em dados defasados, reduzindo sua capacidade de reação a mudanças de mercado.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Você possui dashboards com métricas-chave (MRR, CAC, LTV, churn) atualizados semanalmente. A equipe revisa esses números, mas sem muita customização de relatórios.
+
+Próximos passos:
+Personalize relatórios para diferentes níveis (gestão, vendas, marketing).
+Inclua análises de tendências e previsões de receita.
+Automate o envio de alertas quando KPIs saírem de faixas esperadas.
+
+O que você pode esperar:
+ • Aceleração de até 25% na identificação de desvios de performance.
+ • Decisões mais embasadas, com previsibilidade de receita para o próximo trimestre.
+
+Se não mudar:
+Você pode perder insights valiosos ao não segmentar relatórios para stakeholders diferentes, levando a desalinhamentos.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Você conta com uma plataforma de BI avançada, dashboards interativos em tempo real, relatórios customizados para cada área e previsões automáticas de receita.
+
+Próximos passos:
+Implemente análises preditivas para cenários de receita (best-case, worst-case).
+Integre dados financeiros com operacionais para visão completa do negócio.
+Use storytelling de dados em relatórios para engajar executivos e equipes.
+
+O que você pode esperar:
+ • Até 40% de ganho em velocidade e qualidade de decisão estratégica.
+ • Transparência total entre áreas, com relatórios autoexplicativos e acionáveis.
+
+Se não mudar:
+Você ficará dependente de relatórios estáticos e perderá competitividade frente a empresas que utilizam BI proativo.`,
+            },
+        ],
+
+        "Automação & Eficiência Operacional": [
+            {
+                nivel: "Iniciante (Emergente - 0-24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Todas as tarefas são manuais: seguimento de leads, nutrição, alertas e relatórios. Não há uso de automação ou IA em nenhuma etapa da operação.
+
+Próximos passos:
+Identifique uma tarefa repetitiva (ex.: envio de e-mails de follow-up) e automatize usando regras simples de CRM ou ferramentas de fluxo de trabalho.
+Configure lembretes automáticos para prazos importantes (ex.: vencimento de proposta).
+Documente o processo para facilitar futuras automações.
+
+O que você pode esperar:
+ • Até 15% de redução no tempo gasto em tarefas operacionais.
+ • Menos erros manuais e esquecimentos.
+
+Se não mudar:
+Sua equipe perderá tempo em atividades de baixo valor, reduzindo a capacidade de focar em estratégia e relacionamento.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25-49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Você já usa automações básicas: envios de e-mail marketing, notificações de leads e alguns gatilhos de CRM, mas sem integração profunda nem personalização avançada.
+
+Próximos passos:
+Crie fluxos de nutrição segmentados com base em comportamento (clique, download).
+Integre automações de CRM a ferramentas de marketing para sincronizar status de lead.
+Meça a performance de cada fluxo e refine gatilhos e mensagens.
+
+O que você pode esperar:
+ • Até 25% de aumento na eficiência dos fluxos de nutrição.
+ • Maior consistência no acompanhamento de leads e clientes.
+
+Se não mudar:
+Você corre o risco de enviar mensagens irrelevantes, frustrando prospects e desperdiçando oportunidades.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50-74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Há automações bem definidas em vários pontos do funil: scoring de leads, nutrição avançada e alertas de churn. No entanto, não há ainda modelos de IA para prever comportamentos ou recomendar ações.
+
+Próximos passos:
+Adote ferramentas de lead scoring baseadas em dados históricos para priorizar contatos.
+Implemente chatbots simples para triagem inicial de dúvidas e coleta de informações.
+Revise periodicamente as regras de automação para incorporar novos padrões de comportamento.
+
+O que você pode esperar:
+ • Até 30% de melhoria na qualidade dos leads que chegam ao time de vendas.
+ • Redução de 20% no tempo de resposta inicial a novos contatos.
+
+Se não mudar:
+Você não estará aproveitando completamente os dados disponíveis, perdendo eficiência e visibilidade de oportunidades emergentes.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75-100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Sua operação incorpora IA em previsão de churn, recomendação de upsell, chatbots inteligentes e otimização de cadência com base em análise preditiva. As automações são orquestradas de ponta a ponta.
+
+Próximos passos:
+Aplique modelos de machine learning para prever comportamento de compra e sugerir próximos melhores passos.
+Integre chatbots de IA avançados para suporte 24/7 e qualificação automática de leads.
+Use IA para otimizar dinamicamente orçamentos de campanhas e ajustes de segmentação.
+
+O que você pode esperar:
+ • Até 40% de redução em churn e aumento de 25% em upsell.
+ • Agilidade extrema na resposta a sinais de mercado e comportamento do cliente.
+
+Se não mudar:
+Você ficará atrás de empresas que usam IA para acelerar vendas e personalizar o relacionamento, perdendo vantagem competitiva.`,
+            },
+        ], // 👈 aqui precisa dessa vírgula antes de começar o próximo bloco
+
+        "Alinhamento entre Marketing, Vendas e Atendimento": [
+            {
+                nivel: "Iniciante (Emergente - 0 - 24%)",
+                faixa: [0, 33],
+                texto: `O que isso significa:
+Cada time trabalha de forma isolada, com métricas e prioridades próprias. Leads e clientes “passam de mão em mão” sem processos claros de comunicação.
+
+Próximos passos:
+• Crie um canal de comunicação compartilhado (chat ou email grupal) para leads e oportunidades.
+• Agende uma reunião quinzenal rápida de atualização entre os três times.
+• Defina um glossário de termos e estágios do funil para uso comum.
+
+O que você pode esperar:
+• Até 15% de redução em retrabalho e ruídos na passagem de bastão.
+• Mais visibilidade do status dos leads, evitando contatos duplicados.
+
+Se não mudar:
+Informações se perdem, clientes ficam confusos com mensagens conflitantes e oportunidades caem entre as áreas.`,
+            },
+            {
+                nivel: "Básico (Desenvolvendo - 25 - 49%)",
+                faixa: [34, 66],
+                texto: `O que isso significa:
+Vocês compartilham dados no CRM e realizam reuniões mensais, mas ainda há silos: nem sempre todos usam as mesmas ferramentas ou entendem as metas uns dos outros.
+
+Próximos passos:
+• Crie OKRs ou metas compartilhadas e visualize-as em um dashboard comum.
+• Realize um workshop conjunto para alinhar processos e responsabilidades.
+• Padronize templates de relatório para marketing, vendas e atendimento.
+
+O que você pode esperar:
+• Até 20% de melhoria na velocidade de resposta a leads e problemas de clientes.
+• Equipes mais colaborativas, diminuindo falhas de comunicação.
+
+Se não mudar:
+Diferenças de entendimento persistirão, resultando em abordagens desalinhadas e perda de confiança do cliente.`,
+            },
+            {
+                nivel: "Intermediário (Maduro - 50 - 74%)",
+                faixa: [67, 99],
+                texto: `O que isso significa:
+Existem processos claros de handoff e um dashboard compartilhado com indicadores de cada área. Reuniões semanais revisam pipeline e atendimento, mas ajustes ainda demandam coordenação manual.
+
+Próximos passos:
+• Automatize alertas de SLA no CRM para sinalizar pendências entre áreas.
+• Use reuniões curtas diárias (stand-up) para tratar bloqueios urgentes.
+• Implemente um playbook de comunicação que detalhe quem faz o quê e quando.
+
+O que você pode esperar:
+• Até 25% de ganho em velocidade de solução de problemas e follow-up de leads.
+• Maior clareza de responsabilidades, reduzindo erros de atendimento e vendas.
+
+Se não mudar:
+Processos manuais continuarão custando tempo e gerando inconsistências, mesmo com dashboards e reuniões.`,
+            },
+            {
+                nivel: "Avançado (Líder - 75 - 100%)",
+                faixa: [100, 135],
+                texto: `O que isso significa:
+Marketing, Vendas e Atendimento operam como um time único: dados fluem automaticamente, metas são integradas e todos colaboram em tempo real via plataforma única.
+
+Próximos passos:
+• Configure automações de workflow que atribuem tarefas entre áreas no momento certo.
+• Use ferramentas de colaboração (chat, boards) integradas ao seu CRM/BI para gerenciar fluxos.
+• Realize retrospectivas periódicas para otimizar continuamente processos compartilhados.
+
+O que você pode esperar:
+• Até 35% de redução no tempo de conversão de leads em clientes e na resolução de chamados.
+• Experiência unificada para o cliente, aumentando satisfação e fidelidade.
+
+Se não mudar:
+Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando atrás de concorrentes com times verdadeiramente integrados.`,
+            },
+        ],
+    }
+
+    const handleSelect = (valor) => {
+        const blocoAtual = perguntas[step].bloco
+        setScores({
+            ...scores,
+            [blocoAtual]: (scores[blocoAtual] || 0) + valor,
+        })
+
+        const proximoStep = step + 1
+        if (proximoStep >= perguntas.length) {
+            setFase("resultado")
+        } else {
+            setStep(proximoStep)
+        }
+    }
+
+    const getResultado = (bloco) => {
+        const score = scores[bloco] || 0
+        const faixa = resultados[bloco].find(
+            (r) => score >= r.faixa[0] && score <= r.faixa[1]
+        )
+        return faixa ? { ...faixa, score } : null
+    }
+
+    if (fase === "inicio") {
+        return (
+            <div style={{ padding: 32, textAlign: "center" }}>
+                <button
+                    onClick={() => setFase("form")}
+                    style={{
+                        background: "#fff",
+                        color: "#000",
+                        padding: "16px 32px",
+                        fontSize: 18,
+                        borderRadius: 8,
+                        border: "1px solid #ccc",
+                        cursor: "pointer",
+                    }}
+                >
+                    Começar Diagnóstico
+                </button>
+            </div>
+        )
+    }
+
+    if (fase === "form") {
+        const handleChange = (e) => {
+            const { name, value } = e.target
+            if (name === "phone") {
+                const raw = value.replace(/\D/g, "")
+                const formatted = raw
+                    .replace(/^(\d{2})(\d)/, "($1) $2")
+                    .replace(/(\d{5})(\d)/, "$1-$2")
+                    .slice(0, 15)
+                setFormData({ ...formData, [name]: formatted })
+            } else {
+                setFormData({ ...formData, [name]: value })
+            }
+        }
+
+        const handleSubmit = () => {
+            if (formData.firstName && formData.phone && formData.email) {
+                setFase("quiz")
+            } else {
+                alert("Por favor, preencha todos os campos.")
+            }
+        }
+
+        return (
+            <div style={{ maxWidth: 400, margin: "0 auto", padding: 32 }}>
+                <h2 style={{ fontSize: 24, marginBottom: 16 }}>
+                    Preencha seus dados para iniciar
+                </h2>
+                <input
+                    type="text"
+                    name="firstName"
+                    placeholder="Nome *"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    style={inputStyle}
+                />
+                <input
+                    type="text"
+                    name="phone"
+                    placeholder="Whatsapp *"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    style={inputStyle}
+                />
+                <input
+                    type="email"
+                    name="email"
+                    placeholder="Email *"
+                    value={formData.email}
+                    onChange={handleChange}
+                    style={inputStyle}
+                />
+                <button
+                    onClick={handleSubmit}
+                    style={{
+                        width: "100%",
+                        background: "#fff",
+                        color: "#000",
+                        padding: 14,
+                        fontSize: 16,
+                        marginTop: 12,
+                        border: "1px solid #ccc",
+                        borderRadius: 8,
+                        cursor: "pointer",
+                    }}
+                >
+                    Iniciar
+                </button>
+            </div>
+        )
+    }
+
+    if (fase === "quiz") {
+        const bloco = perguntas[step]
+        const questao = bloco.questao
+
+        return (
+            <div
+                style={{
+                    padding: 32,
+                    fontFamily: "Inter, sans-serif",
+                    textAlign: "center",
+                }}
+            >
+                <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 16 }}>
+                    {bloco.titulo}
+                </h2>
+                <p style={{ fontSize: 18, marginBottom: 24 }}>
+                    {questao.texto}
+                </p>
+                <div
+                    style={{
+                        display: "grid",
+                        gridTemplateColumns: "1fr 1fr",
+                        gap: 16,
+                        maxWidth: 800,
+                        margin: "0 auto",
+                    }}
+                >
+                    {questao.opcoes.map((op, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handleSelect(op.valor)}
+                            style={{
+                                padding: "16px 20px",
+                                background: "#fff",
+                                color: "#000",
+                                border: "1px solid #ccc",
+                                borderRadius: 12,
+                                fontSize: 16,
+                                cursor: "pointer",
+                                textAlign: "left",
+                            }}
+                        >
+                            {op.texto}
+                        </button>
+                    ))}
+                </div>
+            </div>
+        )
+    }
+
+    if (fase === "resultado") {
+        return (
+            <div style={{ padding: 32, fontFamily: "Inter, sans-serif" }}>
+                <h2 style={{ fontSize: 28, fontWeight: 600, marginBottom: 24 }}>
+                    Seu Diagnóstico
+                </h2>
+                {Object.keys(scores).map((bloco) => {
+                    const res = getResultado(bloco)
+                    return (
+                        <div key={bloco} style={{ marginBottom: 32 }}>
+                            <h3 style={{ fontSize: 20, fontWeight: 600 }}>
+                                {res.nivel} - {bloco} ({res.score} pts)
+                            </h3>
+                            <pre
+                                style={{ fontSize: 14, whiteSpace: "pre-wrap" }}
+                            >
+                                {res.texto}
+                            </pre>
+                        </div>
+                    )
+                })}
+            </div>
+        )
+    }
+
+    return null
+}
+
+const inputStyle = {
+    width: "100%",
+    padding: 12,
+    marginBottom: 12,
+    fontSize: 16,
+    border: "1px solid #ccc",
+    borderRadius: 8,
+}

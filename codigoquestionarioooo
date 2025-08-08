@@ -1493,10 +1493,22 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
         return faixa ? { ...faixa, score } : null
     }
 
+    // Wrapper único para Framer
+    const rootStyle = {
+        width: "100%",
+        minHeight: 480,
+        position: "relative",
+        zIndex: 1,
+        pointerEvents: "auto",
+    }
+
+    let view = null
+
     if (fase === "inicio") {
-        return (
+        view = (
             <div style={{ padding: 32, textAlign: "center" }}>
                 <button
+                    type="button"
                     onClick={() => setFase("form")}
                     style={{
                         background: "#fff",
@@ -1537,7 +1549,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
             }
         }
 
-        return (
+        view = (
             <div style={{ maxWidth: 400, margin: "0 auto", padding: 32 }}>
                 <h2 style={{ fontSize: 24, marginBottom: 16 }}>
                     Preencha seus dados para iniciar
@@ -1567,6 +1579,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
                     style={inputStyle}
                 />
                 <button
+                    type="button"
                     onClick={handleSubmit}
                     style={{
                         width: "100%",
@@ -1590,14 +1603,8 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
         const bloco = perguntas[step]
         const questao = bloco.questao
 
-        return (
-            <div
-                style={{
-                    padding: 32,
-                    fontFamily: "Inter, sans-serif",
-                    textAlign: "center",
-                }}
-            >
+        view = (
+            <div style={{ padding: 32, textAlign: "center" }}>
                 <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 16 }}>
                     {bloco.titulo}
                 </h2>
@@ -1616,6 +1623,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
                     {questao.opcoes.map((op, index) => (
                         <button
                             key={index}
+                            type="button"
                             onClick={() => handleSelect(op.valor)}
                             style={{
                                 padding: "16px 20px",
@@ -1637,8 +1645,8 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
     }
 
     if (fase === "resultado") {
-        return (
-            <div style={{ padding: 32, fontFamily: "Inter, sans-serif" }}>
+        view = (
+            <div style={{ padding: 32 }}>
                 <h2 style={{ fontSize: 28, fontWeight: 600, marginBottom: 24 }}>
                     Seu Diagnóstico
                 </h2>
@@ -1649,9 +1657,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
                             <h3 style={{ fontSize: 20, fontWeight: 600 }}>
                                 {res.nivel} - {bloco} ({res.score} pts)
                             </h3>
-                            <pre
-                                style={{ fontSize: 14, whiteSpace: "pre-wrap" }}
-                            >
+                            <pre style={{ fontSize: 14, whiteSpace: "pre-wrap" }}>
                                 {res.texto}
                             </pre>
                         </div>
@@ -1661,7 +1667,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
         )
     }
 
-    return null
+    return <div style={rootStyle}>{view}</div>
 }
 
 const inputStyle = {

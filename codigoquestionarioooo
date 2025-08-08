@@ -1,6 +1,6 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
-export function DiagnosticoQuiz() {
+export function DiagnosticoQuiz({ onSubmit, submitUrl } = {}) {
     const [fase, setFase] = useState("inicio")
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({
@@ -9,6 +9,29 @@ export function DiagnosticoQuiz() {
         email: "",
     })
     const [scores, setScores] = useState({})
+    const [isMobile, setIsMobile] = useState(false)
+
+    // Fonte Poppins (injeção dinâmica)
+    useEffect(() => {
+        const existing = document.querySelector(
+            'link[href*="fonts.googleapis.com/css2?family=Poppins"]'
+        )
+        if (!existing) {
+            const link = document.createElement("link")
+            link.rel = "stylesheet"
+            link.href =
+                "https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+            document.head.appendChild(link)
+        }
+    }, [])
+
+    // Responsividade: 1 coluna no mobile
+    useEffect(() => {
+        const update = () => setIsMobile(window.innerWidth < 640)
+        update()
+        window.addEventListener("resize", update)
+        return () => window.removeEventListener("resize", update)
+    }, [])
 
     const perguntas = [
         {
@@ -1493,9 +1516,66 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
         return faixa ? { ...faixa, score } : null
     }
 
+    // Mapa de ícones por bloco
+    const iconesPorBloco = {
+        "Estratégia Comercial": "♟️",
+        "Perfil do Cliente Ideal & Persona": "🎯",
+        "Geração de Demanda": "📈",
+        "Gestão de Funil & Processo Comercial": "🧭",
+        "Capacitação da Equipe": "🧑‍🏫",
+        "Sucesso do Cliente & Retenção": "🤝",
+        "Ferramentas & Integração de Dados": "🔗",
+        "Métricas & Relatórios de Receita": "📊",
+        "Maturidade em Automação & Inteligência Artificial": "🤖",
+        "Alinhamento entre Marketing, Vendas e Atendimento": "🔀",
+    }
+
+    // Envio de dados ao final
+    const handleEnviarResultados = async () => {
+        const payload = {
+            usuario: formData,
+            scores,
+            resultados: Object.keys(scores).map((bloco) => {
+                const res = getResultado(bloco)
+                return { bloco, nivel: res?.nivel, score: res?.score }
+            }),
+            submittedAt: new Date().toISOString(),
+        }
+
+        try {
+            if (typeof onSubmit === "function") {
+                await onSubmit(payload)
+            }
+            const envUrl =
+                submitUrl ||
+                (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SUBMIT_URL) ||
+                (typeof importMeta !== "undefined" && importMeta.env?.VITE_SUBMIT_URL) ||
+                null
+
+            if (envUrl) {
+                await fetch(envUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload),
+                })
+            } else {
+                // Fallback: apenas loga os dados
+                console.log("Resultado do Diagnóstico:", payload)
+                alert(
+                    "Obrigado! Seus resultados foram registrados. Em breve nosso time entrará em contato."
+                )
+            }
+        } catch (err) {
+            console.error("Falha ao enviar resultados", err)
+            alert(
+                "Não foi possível enviar os resultados agora. Tentaremos novamente mais tarde."
+            )
+        }
+    }
+
     if (fase === "inicio") {
         return (
-            <div style={{ padding: 32, textAlign: "center" }}>
+            <div style={{ padding: 32, textAlign: "center", fontFamily: "Poppins, sans-serif" }}>
                 <button
                     onClick={() => setFase("form")}
                     style={{
@@ -1538,8 +1618,8 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
         }
 
         return (
-            <div style={{ maxWidth: 400, margin: "0 auto", padding: 32 }}>
-                <h2 style={{ fontSize: 24, marginBottom: 16 }}>
+            <div style={{ maxWidth: 400, margin: "0 auto", padding: 32, fontFamily: "Poppins, sans-serif" }}>
+                <h2 style={{ fontSize: 24, marginBottom: 16, color: "#fff", fontWeight: 700 }}>
                     Preencha seus dados para iniciar
                 </h2>
                 <input
@@ -1594,20 +1674,20 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
             <div
                 style={{
                     padding: 32,
-                    fontFamily: "Inter, sans-serif",
+                    fontFamily: "Poppins, sans-serif",
                     textAlign: "center",
                 }}
             >
-                <h2 style={{ fontSize: 24, fontWeight: 600, marginBottom: 16 }}>
+                <h2 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16, color: "#fff" }}>
                     {bloco.titulo}
                 </h2>
-                <p style={{ fontSize: 18, marginBottom: 24 }}>
+                <p style={{ fontSize: 18, marginBottom: 24, color: "#111" }}>
                     {questao.texto}
                 </p>
                 <div
                     style={{
                         display: "grid",
-                        gridTemplateColumns: "1fr 1fr",
+                        gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
                         gap: 16,
                         maxWidth: 800,
                         margin: "0 auto",
@@ -1637,26 +1717,60 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
     }
 
     if (fase === "resultado") {
+        const blocoChaves = Object.keys(scores)
         return (
-            <div style={{ padding: 32, fontFamily: "Inter, sans-serif" }}>
-                <h2 style={{ fontSize: 28, fontWeight: 600, marginBottom: 24 }}>
+            <div style={{ padding: 32, fontFamily: "Poppins, sans-serif" }}>
+                <h2 style={{ fontSize: 28, fontWeight: 700, marginBottom: 24, color: "#fff" }}>
                     Seu Diagnóstico
                 </h2>
-                {Object.keys(scores).map((bloco) => {
+                {blocoChaves.map((bloco) => {
                     const res = getResultado(bloco)
+                    const icone = iconesPorBloco[bloco] || "📌"
                     return (
-                        <div key={bloco} style={{ marginBottom: 32 }}>
-                            <h3 style={{ fontSize: 20, fontWeight: 600 }}>
-                                {res.nivel} - {bloco} ({res.score} pts)
-                            </h3>
-                            <pre
-                                style={{ fontSize: 14, whiteSpace: "pre-wrap" }}
-                            >
-                                {res.texto}
+                        <div
+                            key={bloco}
+                            style={{
+                                marginBottom: 24,
+                                background: "#fff",
+                                borderRadius: 16,
+                                padding: 20,
+                                boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+                                border: "1px solid #eee",
+                            }}
+                        >
+                            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                                <div style={{ fontSize: 28 }}>{icone}</div>
+                                <div style={{ fontWeight: 700, fontSize: 18, color: "#111" }}>{bloco}</div>
+                            </div>
+                            <div style={{ fontSize: 14, marginBottom: 8, color: "#2f855a", fontWeight: 600 }}>
+                                {res?.nivel} — {res?.score} pts
+                            </div>
+                            <pre style={{ fontSize: 14, whiteSpace: "pre-wrap", margin: 0, color: "#333" }}>
+                                {res?.texto}
                             </pre>
                         </div>
                     )
                 })}
+
+                <button
+                    onClick={handleEnviarResultados}
+                    style={{
+                        width: "100%",
+                        maxWidth: 420,
+                        background: "#111",
+                        color: "#fff",
+                        padding: 16,
+                        fontSize: 16,
+                        fontWeight: 600,
+                        borderRadius: 12,
+                        border: "1px solid #000",
+                        cursor: "pointer",
+                        display: "block",
+                        margin: "24px auto 0",
+                    }}
+                >
+                    Falar com um especialista
+                </button>
             </div>
         )
     }
@@ -1671,4 +1785,5 @@ const inputStyle = {
     fontSize: 16,
     border: "1px solid #ccc",
     borderRadius: 8,
+    fontFamily: "Poppins, sans-serif",
 }

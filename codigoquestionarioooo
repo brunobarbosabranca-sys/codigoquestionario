@@ -628,7 +628,7 @@ export function DiagnosticoQuiz() {
         },
         {
             bloco: "Maturidade em Automação & Inteligência Artificial",
-            titulo: "Maturidade em Automação & IA - Bloco 1",
+            titulo: "Maturidade em Automação & Inteligência Artificial - Bloco 1",
             questao: {
                 texto: "Você utiliza automações em alguma etapa do processo comercial?",
                 opcoes: [
@@ -653,7 +653,7 @@ export function DiagnosticoQuiz() {
         },
         {
             bloco: "Maturidade em Automação & Inteligência Artificial",
-            titulo: "Maturidade em Automação & IA - Bloco 2",
+            titulo: "Maturidade em Automação & Inteligência Artificial - Bloco 2",
             questao: {
                 texto: "Sua empresa já utiliza inteligência artificial para melhorar vendas ou marketing?",
                 opcoes: [
@@ -675,7 +675,7 @@ export function DiagnosticoQuiz() {
         },
         {
             bloco: "Maturidade em Automação & Inteligência Artificial",
-            titulo: "Maturidade em Automação & IA - Bloco 3",
+            titulo: "Maturidade em Automação & Inteligência Artificial - Bloco 3",
             questao: {
                 texto: "Com que frequência você testa e implementa novas tecnologias no processo comercial?",
                 opcoes: [
@@ -700,7 +700,7 @@ export function DiagnosticoQuiz() {
         },
         {
             bloco: "Alinhamento entre Marketing, Vendas e Atendimento",
-            titulo: "Integração Marketing, Vendas e Atendimento - Bloco 1",
+            titulo: "Alinhamento entre Marketing, Vendas e Atendimento - Bloco 1",
             questao: {
                 texto: "Como é o nível de alinhamento entre os times de marketing, vendas e atendimento?",
                 opcoes: [
@@ -725,7 +725,7 @@ export function DiagnosticoQuiz() {
         },
         {
             bloco: "Alinhamento entre Marketing, Vendas e Atendimento",
-            titulo: "Integração Marketing, Vendas e Atendimento - Bloco 1",
+            titulo: "Alinhamento entre Marketing, Vendas e Atendimento - Bloco 1",
             questao: {
                 texto: "Como as áreas trocam informações sobre os leads e clientes?",
                 opcoes: [
@@ -1319,7 +1319,7 @@ Você ficará dependente de relatórios estáticos e perderá competitividade fr
             },
         ],
 
-        "Automação & Eficiência Operacional": [
+        "Maturidade em Automação & Inteligência Artificial": [
             {
                 nivel: "Iniciante (Emergente - 0-24%)",
                 faixa: [0, 33],

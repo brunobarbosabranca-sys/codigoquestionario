@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react"
 
-export function DiagnosticoQuiz({ onSubmit, submitUrl } = {}) {
+function DiagnosticoQuiz({ onSubmit, submitUrl } = {}) {
     const [fase, setFase] = useState("inicio")
     const [step, setStep] = useState(0)
     const [formData, setFormData] = useState({
@@ -1546,11 +1546,7 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
             if (typeof onSubmit === "function") {
                 await onSubmit(payload)
             }
-            const envUrl =
-                submitUrl ||
-                (typeof process !== "undefined" && process.env?.NEXT_PUBLIC_SUBMIT_URL) ||
-                (typeof importMeta !== "undefined" && importMeta.env?.VITE_SUBMIT_URL) ||
-                null
+            const envUrl = submitUrl || null
 
             if (envUrl) {
                 await fetch(envUrl, {
@@ -1777,6 +1773,8 @@ Você perderá a vantagem de operar como uma máquina bem orquestrada, ficando a
 
     return null
 }
+
+export default DiagnosticoQuiz
 
 const inputStyle = {
     width: "100%",
